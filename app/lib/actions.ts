@@ -52,9 +52,9 @@ export async function createInvoice(prevState: State, formData: FormData){
         await sql`
             INSERT INTO invoices (customer_id, amount, status, date)
             VALUES (${customerId}, ${amountInCents}, ${status}, ${date})`;
-        } catch (error) {
+        } catch (error: unknown) {
         return {
-            message: 'Database Error: Failed to Create Invoice'
+            message: `Database Error: Failed to Create Invoice. ${error instanceof Error ? error.message : 'Unknown error occurred'}`
         };
     }
 
@@ -85,9 +85,9 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
       WHERE id = ${id}
     `; 
 } 
-    catch (error) { 
+    catch (error: unknown) { 
         return { 
-            message: 'Database Error: Failed to Update Invoice' 
+            message: `Database Error: Failed to Update Invoice. ${error instanceof Error ? error.message : 'Unknown error occurred'}`
         }; 
     }
    
@@ -102,9 +102,9 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
         revalidatePath('/dashboard/invoices');
         return {message: 'Deleted Invoice.'};
     } 
-    catch (error) {
+    catch (error: unknown) {
         return {
-            message: 'Database Error: Failed to Delete Invoice'
+            message: `Database Error: Failed to Delete Invoice. ${error instanceof Error ? error.message : 'Unknown error occurred'}`
         };
     }
 }
@@ -127,5 +127,5 @@ export async function authenticate(
       throw error;
     }
   }
-  
+
 
